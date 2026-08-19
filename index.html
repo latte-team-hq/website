@@ -9,10 +9,16 @@
       content="Latte Team helps companies solve business needs with automation, integrations, no-code/low-code tools, and custom software."
     >
     <link rel="canonical" href="https://latte.team/">
-    <link rel="icon" href="assets/latte-mark.svg" type="image/svg+xml">
+    <link rel="alternate" hreflang="en" href="https://latte.team/">
+    <link rel="alternate" hreflang="ru" href="https://latte.team/ru/">
+    <link rel="alternate" hreflang="x-default" href="https://latte.team/">
+    <link rel="icon" href="/assets/latte-mark.svg" type="image/svg+xml">
+    <link rel="alternate icon" href="/favicon.ico" type="image/x-icon">
 
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Latte Team">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ru_RU">
     <meta property="og:title" content="Latte Team — Digital Solutions for Business">
     <meta
       property="og:description"
@@ -20,20 +26,28 @@
     >
     <meta property="og:url" content="https://latte.team/">
     <meta property="og:image" content="https://latte.team/assets/og-image.png">
+    <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Latte Team — digital solutions for business">
     <meta name="twitter:card" content="summary_large_image">
 
-    <link rel="stylesheet" href="styles.css?v=4">
+    <link rel="stylesheet" href="/styles.css?v=5">
   </head>
   <body>
     <header class="site-header">
       <a class="brand" href="#top" aria-label="Latte Team home">
-        <img src="assets/latte-mark.svg" width="42" height="42" alt="">
+        <img src="/assets/latte-mark.svg" width="42" height="42" alt="">
         <span>Latte Team</span>
       </a>
-      <a class="header-contact" href="mailto:sales@latte.team">sales@latte.team</a>
+      <div class="header-actions">
+        <a class="header-contact" href="mailto:sales@latte.team">sales@latte.team</a>
+        <nav class="language-switcher" aria-label="Language">
+          <a href="/" lang="en" aria-current="page">EN</a>
+          <span aria-hidden="true">·</span>
+          <a href="/ru/" lang="ru">RU</a>
+        </nav>
+      </div>
     </header>
 
     <main id="top">
@@ -56,7 +70,7 @@
         </div>
 
         <div class="hero-mark" aria-hidden="true">
-          <img src="assets/latte-mark.svg" alt="">
+          <img src="/assets/latte-mark.svg" alt="">
         </div>
       </section>
 
