@@ -176,7 +176,6 @@ h1 span {
   place-items: center;
   border-radius: 50%;
   background: transparent;
-  margin-right: clamp(2rem, 3vw, 3.5rem);
 }
 
 .hero-mark::before,
@@ -307,7 +306,7 @@ footer a {
   }
 
   .contact-email {
-    justify-self: start;
+    justify-self: end;
   }
 }
 
