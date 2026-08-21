@@ -3,6 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'"
+    >
     <title>Latte Team — Digital Solutions for Business</title>
     <meta
       name="description"
@@ -11,6 +15,7 @@
     <link rel="canonical" href="https://latte.team/">
     <link rel="alternate" hreflang="en" href="https://latte.team/">
     <link rel="alternate" hreflang="ru" href="https://latte.team/ru/">
+    <link rel="alternate" hreflang="ka-GE" href="https://latte.team/ka/">
     <link rel="alternate" hreflang="x-default" href="https://latte.team/">
     <link rel="icon" href="/assets/latte-mark.svg" type="image/svg+xml">
     <link rel="alternate icon" href="/favicon.ico" type="image/x-icon">
@@ -19,6 +24,7 @@
     <meta property="og:site_name" content="Latte Team">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ru_RU">
+    <meta property="og:locale:alternate" content="ka_GE">
     <meta property="og:title" content="Latte Team — Digital Solutions for Business">
     <meta
       property="og:description"
@@ -26,13 +32,21 @@
     >
     <meta property="og:url" content="https://latte.team/">
     <meta property="og:image" content="https://latte.team/assets/og-image.png">
+    <meta property="og:image:secure_url" content="https://latte.team/assets/og-image.png">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Latte Team — digital solutions for business">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Latte Team — Digital Solutions for Business">
+    <meta
+      name="twitter:description"
+      content="Practical digital solutions shaped around real business needs."
+    >
+    <meta name="twitter:image" content="https://latte.team/assets/og-image.png">
+    <meta name="twitter:image:alt" content="Latte Team — digital solutions for business">
 
-    <link rel="stylesheet" href="/styles.css?v=5">
+    <link rel="stylesheet" href="/styles.css?v=7">
   </head>
   <body>
     <header class="site-header">
@@ -41,10 +55,12 @@
         <span>Latte Team</span>
       </a>
       <div class="header-actions">
-        <nav class="language-switcher" aria-label="Language">
+        <nav class="language-switcher" aria-label="Language selection">
           <a href="/" lang="en" aria-current="page">EN</a>
           <span aria-hidden="true">·</span>
           <a href="/ru/" lang="ru">RU</a>
+          <span aria-hidden="true">·</span>
+          <a href="/ka/" lang="ka">ქართული</a>
         </nav>
         <a class="header-contact" href="mailto:sales@latte.team">sales@latte.team</a>
       </div>
