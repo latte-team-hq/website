@@ -1,15 +1,47 @@
-# Latte Team temporary site
+# Latte Team temporary website
 
-Static, dependency-free draft for `https://latte.team`.
+Published static website for Latte Team:
+
+- English: <https://latte.team/>
+- Russian: <https://latte.team/ru/>
+
+The site is dependency-free and uses plain HTML and CSS. It has no framework, build step, package
+manager, or client-side JavaScript.
 
 ## Local preview
 
-Serve this directory with any static HTTP server and open `/`.
+Serve the repository root with any static HTTP server, for example:
 
-The selected launch draft uses copy variant A, a white page background, and the edge-anchored rings
-Hero composition. It has no framework, build step, or client-side JavaScript.
+```sh
+python3 -m http.server 4173
+```
 
-## Publication boundary
+Then open <http://127.0.0.1:4173/> or <http://127.0.0.1:4173/ru/>.
 
-This directory is prepared for GitHub Pages, but it has not been published. Repository creation,
-DNS changes, and deployment require separate owner approval.
+## Checks
+
+Run the dependency-free site checks with Node.js 20 or newer:
+
+```sh
+node scripts/check-site.mjs
+```
+
+The checks cover page structure, metadata, internal links, CSS syntax basics, and required assets.
+
+## Content security policy
+
+Each HTML page declares a meta CSP that permits only same-origin styles, images, and fonts. Scripts,
+forms, plugins, and base URL changes are not needed by this static site and remain blocked. The
+`frame-ancestors` directive is intentionally omitted because browsers do not enforce it from a meta
+policy; it would require an HTTP response header managed outside this repository.
+
+## Publishing
+
+GitHub Pages publishes the `main` branch at the custom domain declared in `CNAME`. Changes should
+be reviewed through a pull request. Repository, Pages, DNS, domain, and HTTPS settings are managed
+outside this codebase.
+
+## Third-party software
+
+Third-party notices and licenses are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+No license is asserted here for the site's original code, content, or branding.

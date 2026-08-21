@@ -3,6 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'"
+    >
     <title>Latte Team — Цифровые решения для бизнеса</title>
     <meta
       name="description"
@@ -26,22 +30,30 @@
     >
     <meta property="og:url" content="https://latte.team/ru/">
     <meta property="og:image" content="https://latte.team/assets/og-image.png">
+    <meta property="og:image:secure_url" content="https://latte.team/assets/og-image.png">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Latte Team — цифровые решения для бизнеса">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Latte Team — Цифровые решения для бизнеса">
+    <meta
+      name="twitter:description"
+      content="Практичные цифровые решения, построенные вокруг задач бизнеса."
+    >
+    <meta name="twitter:image" content="https://latte.team/assets/og-image.png">
+    <meta name="twitter:image:alt" content="Latte Team — цифровые решения для бизнеса">
 
-    <link rel="stylesheet" href="/styles.css?v=5">
+    <link rel="stylesheet" href="/styles.css?v=6">
   </head>
   <body>
     <header class="site-header">
-      <a class="brand" href="#top" aria-label="На главную Latte Team">
+      <a class="brand" href="#top" aria-label="Latte Team — на главную">
         <img src="/assets/latte-mark.svg" width="42" height="42" alt="">
         <span>Latte Team</span>
       </a>
       <div class="header-actions">
-        <nav class="language-switcher" aria-label="Язык">
+        <nav class="language-switcher" aria-label="Выбор языка">
           <a href="/" lang="en">EN</a>
           <span aria-hidden="true">·</span>
           <a href="/ru/" lang="ru" aria-current="page">RU</a>
