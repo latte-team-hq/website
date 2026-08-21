@@ -7,12 +7,21 @@
     <loc>https://latte.team/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://latte.team/" />
     <xhtml:link rel="alternate" hreflang="ru" href="https://latte.team/ru/" />
+    <xhtml:link rel="alternate" hreflang="ka-GE" href="https://latte.team/ka/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://latte.team/" />
   </url>
   <url>
     <loc>https://latte.team/ru/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://latte.team/" />
     <xhtml:link rel="alternate" hreflang="ru" href="https://latte.team/ru/" />
+    <xhtml:link rel="alternate" hreflang="ka-GE" href="https://latte.team/ka/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://latte.team/" />
+  </url>
+  <url>
+    <loc>https://latte.team/ka/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://latte.team/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://latte.team/ru/" />
+    <xhtml:link rel="alternate" hreflang="ka-GE" href="https://latte.team/ka/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://latte.team/" />
   </url>
 </urlset>

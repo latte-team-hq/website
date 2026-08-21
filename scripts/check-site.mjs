@@ -62,6 +62,7 @@ const requiredFiles = [
   "assets/latte-mark.svg",
   "assets/og-image.png",
   "favicon.ico",
+  "ka/index.html",
   "licenses/Comfortaa-OFL-1.1.txt",
   "robots.txt",
   "sitemap.xml",
@@ -73,10 +74,39 @@ for (const file of requiredFiles) {
 }
 
 const pages = [
-  { file: "index.html", lang: "en", canonical: "https://latte.team/", currentLanguage: "EN" },
-  { file: "ru/index.html", lang: "ru", canonical: "https://latte.team/ru/", currentLanguage: "RU" },
+  {
+    file: "index.html",
+    lang: "en",
+    canonical: "https://latte.team/",
+    currentLanguage: "EN",
+    ogLocale: "en_US",
+    ogAlternates: ["ru_RU", "ka_GE"],
+  },
+  {
+    file: "ru/index.html",
+    lang: "ru",
+    canonical: "https://latte.team/ru/",
+    currentLanguage: "RU",
+    ogLocale: "ru_RU",
+    ogAlternates: ["en_US", "ka_GE"],
+  },
+  {
+    file: "ka/index.html",
+    lang: "ka",
+    canonical: "https://latte.team/ka/",
+    currentLanguage: "ქართული",
+    ogLocale: "ka_GE",
+    ogAlternates: ["en_US", "ru_RU"],
+  },
   { file: "404.html", lang: "en", noindex: true },
 ];
+
+const languageAlternates = {
+  en: "https://latte.team/",
+  ru: "https://latte.team/ru/",
+  "ka-GE": "https://latte.team/ka/",
+  "x-default": "https://latte.team/",
+};
 
 for (const page of pages) {
   const html = read(page.file);
@@ -113,6 +143,15 @@ for (const page of pages) {
   if (!page.canonical && canonical) fail(`${page.file}: a 404 page must not be canonicalized`);
 
   if (page.currentLanguage) {
+    for (const [language, href] of Object.entries(languageAlternates)) {
+      const alternate = linkTags.find(
+        (tag) => attribute(tag, "rel") === "alternate" && attribute(tag, "hreflang") === language,
+      );
+      if (attribute(alternate ?? "", "href") !== href) {
+        fail(`${page.file}: incorrect ${language} alternate URL`);
+      }
+    }
+
     const current = html.match(/<a\b[^>]*aria-current=["']page["'][^>]*>([\s\S]*?)<\/a>/i);
     const currentText = current?.[1].replace(/<[^>]+>/g, "").trim();
     if (currentText !== page.currentLanguage) fail(`${page.file}: incorrect active language`);
@@ -120,6 +159,16 @@ for (const page of pages) {
       if (!metaTags.some((tag) => attribute(tag, "property") === property)) {
         fail(`${page.file}: missing ${property}`);
       }
+    }
+    const ogLocale = metaTags.find((tag) => attribute(tag, "property") === "og:locale");
+    if (attribute(ogLocale ?? "", "content") !== page.ogLocale) {
+      fail(`${page.file}: incorrect Open Graph locale`);
+    }
+    const ogAlternates = metaTags
+      .filter((tag) => attribute(tag, "property") === "og:locale:alternate")
+      .map((tag) => attribute(tag, "content"));
+    for (const expected of page.ogAlternates) {
+      if (!ogAlternates.includes(expected)) fail(`${page.file}: missing Open Graph alternate ${expected}`);
     }
     for (const name of ["twitter:card", "twitter:title", "twitter:description", "twitter:image", "twitter:image:alt"]) {
       if (!metaTags.some((tag) => attribute(tag, "name") === name)) {
@@ -183,9 +232,16 @@ if (/\b(?:id|style|overflow|preserveAspectRatio)=/.test(svg)) {
 }
 
 const sitemap = read("sitemap.xml");
-for (const expected of ["https://latte.team/", "https://latte.team/ru/", 'hreflang="x-default"']) {
+for (const expected of [
+  "https://latte.team/",
+  "https://latte.team/ru/",
+  "https://latte.team/ka/",
+  'hreflang="ka-GE"',
+  'hreflang="x-default"',
+]) {
   if (!sitemap.includes(expected)) fail(`sitemap.xml: missing ${expected}`);
 }
+if ((sitemap.match(/<url>/g) ?? []).length !== 3) fail("sitemap.xml: expected exactly three localized URLs");
 
 const fontPath = path.join(root, "assets/comfortaa-bold.ttf");
 if (existsSync(fontPath)) {

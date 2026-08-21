@@ -95,6 +95,8 @@ footer {
 }
 
 .header-actions {
+  min-width: 0;
+  max-width: 100%;
   display: flex;
   align-items: center;
   gap: clamp(1.25rem, 3vw, 2.5rem);
@@ -102,8 +104,12 @@ footer {
 }
 
 .language-switcher {
+  min-width: 0;
+  max-width: 100%;
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
   gap: 0.38rem;
   color: #50616c;
   font-size: 0.8rem;
@@ -113,8 +119,8 @@ footer {
 }
 
 .language-switcher a {
-  min-width: 2.5rem;
-  min-height: 2.5rem;
+  min-width: 40px;
+  min-height: 40px;
   display: inline-grid;
   place-items: center;
   border-radius: 999px;
@@ -130,6 +136,11 @@ footer {
 .language-switcher a:not([aria-current="page"]):hover {
   color: var(--ink);
   background: rgba(68, 97, 115, 0.08);
+}
+
+.language-switcher a[lang="ka"] {
+  padding-inline: 0.45rem;
+  letter-spacing: normal;
 }
 
 .hero {
@@ -176,6 +187,21 @@ h1 {
 
 h1 span {
   display: block;
+}
+
+html[lang="ka"] h1,
+html[lang="ka"] h2 {
+  letter-spacing: 0;
+}
+
+html[lang="ka"] h1 {
+  line-height: 1.04;
+}
+
+@media (min-width: 1051px) {
+  html[lang="ka"] h1 {
+    font-size: clamp(3.15rem, 4.9vw, 4.5rem);
+  }
 }
 
 .hero-intro {
@@ -461,10 +487,6 @@ footer {
     font-size: 1.1rem;
   }
 
-  .language-switcher a {
-    min-width: 2.25rem;
-    min-height: 2.25rem;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

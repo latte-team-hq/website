@@ -4,6 +4,7 @@ Published static website for Latte Team:
 
 - English: <https://latte.team/>
 - Russian: <https://latte.team/ru/>
+- Georgian: <https://latte.team/ka/>
 
 The site is dependency-free and uses plain HTML and CSS. It has no framework, build step, package
 manager, or client-side JavaScript.
@@ -16,7 +17,8 @@ Serve the repository root with any static HTTP server, for example:
 python3 -m http.server 4173
 ```
 
-Then open <http://127.0.0.1:4173/> or <http://127.0.0.1:4173/ru/>.
+Then open <http://127.0.0.1:4173/>, <http://127.0.0.1:4173/ru/>, or
+<http://127.0.0.1:4173/ka/>.
 
 ## Checks
 
