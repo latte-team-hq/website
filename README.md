@@ -28,7 +28,9 @@ Run the dependency-free site checks with Node.js 20 or newer:
 node scripts/check-site.mjs
 ```
 
-The checks cover page structure, metadata, internal links, CSS syntax basics, and required assets.
+The checks cover page structure, metadata, internal and same-origin metadata links, consistent CSS
+cache versions, CSS syntax basics, and required assets. Pull requests and pushes to `main` run the
+same checks in GitHub Actions.
 
 ## Content security policy
 

@@ -12,7 +12,14 @@
     <meta name="description" content="The requested page could not be found.">
     <link rel="icon" href="/assets/latte-mark.svg" type="image/svg+xml">
     <link rel="alternate icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="/styles.css?v=7">
+    <link
+      rel="preload"
+      href="/assets/comfortaa-latin-700.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    >
+    <link rel="stylesheet" href="/styles.css?v=8">
   </head>
   <body class="error-layout">
     <header class="site-header">
@@ -36,6 +43,7 @@
         <p class="hero-intro">
           The address may be incorrect or the page may have moved.
           <span lang="ru">Возможно, адрес указан неверно или страница была перемещена.</span>
+          <span lang="ka">მისამართი შესაძლოა არასწორია ან გვერდი გადატანილია.</span>
         </p>
         <div class="error-actions">
           <a class="primary-action" href="/">
