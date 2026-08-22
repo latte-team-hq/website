@@ -4,8 +4,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const siteOrigin = new URL("https://latte.team");
 const failures = [];
 let checkedReferences = 0;
+const stylesheetReferences = new Set();
 
 function fail(message) {
   failures.push(message);
@@ -33,12 +35,20 @@ function resolveLocalReference(reference, fromFile) {
   if (reference.startsWith("#")) {
     return { anchor: reference.slice(1), file: fromFile };
   }
-  const clean = reference.split(/[?#]/, 1)[0];
+  let clean = reference.split(/[?#]/, 1)[0];
   if (!clean || clean.startsWith("mailto:") || clean.startsWith("tel:") || clean.startsWith("data:")) {
     return null;
   }
+  if (clean.startsWith("//")) return null;
   if (/^https?:\/\//i.test(clean)) {
-    return null;
+    let absolute;
+    try {
+      absolute = new URL(clean);
+    } catch {
+      return null;
+    }
+    if (absolute.origin !== siteOrigin.origin) return null;
+    clean = absolute.pathname;
   }
   let resolved;
   if (clean.startsWith("/")) {
@@ -54,11 +64,12 @@ function resolveLocalReference(reference, fromFile) {
 
 const requiredFiles = [
   ".nojekyll",
+  ".github/workflows/check-site.yml",
   "404.html",
   "CNAME",
   "README.md",
   "THIRD_PARTY_NOTICES.md",
-  "assets/comfortaa-bold.ttf",
+  "assets/comfortaa-latin-700.woff2",
   "assets/latte-mark.svg",
   "assets/og-image.png",
   "favicon.ico",
@@ -79,6 +90,8 @@ const pages = [
     lang: "en",
     canonical: "https://latte.team/",
     currentLanguage: "EN",
+    homeHref: "/",
+    footer: "Latte Team · Tbilisi, Georgia",
     ogLocale: "en_US",
     ogAlternates: ["ru_RU", "ka_GE"],
   },
@@ -87,6 +100,8 @@ const pages = [
     lang: "ru",
     canonical: "https://latte.team/ru/",
     currentLanguage: "RU",
+    homeHref: "/ru/",
+    footer: "Latte Team · Тбилиси, Грузия",
     ogLocale: "ru_RU",
     ogAlternates: ["en_US", "ka_GE"],
   },
@@ -95,16 +110,24 @@ const pages = [
     lang: "ka",
     canonical: "https://latte.team/ka/",
     currentLanguage: "ქართული",
+    homeHref: "/ka/",
+    footer: "Latte Team · თბილისი, საქართველო",
     ogLocale: "ka_GE",
     ogAlternates: ["en_US", "ru_RU"],
   },
-  { file: "404.html", lang: "en", noindex: true },
+  {
+    file: "404.html",
+    lang: "en",
+    homeHref: "/",
+    footer: "Latte Team · Tbilisi, Georgia",
+    noindex: true,
+  },
 ];
 
 const languageAlternates = {
   en: "https://latte.team/",
   ru: "https://latte.team/ru/",
-  "ka-GE": "https://latte.team/ka/",
+  ka: "https://latte.team/ka/",
   "x-default": "https://latte.team/",
 };
 
@@ -136,11 +159,35 @@ for (const page of pages) {
   }
 
   const linkTags = tags(html, "link");
+  const stylesheets = linkTags.filter((tag) => attribute(tag, "rel") === "stylesheet");
+  if (stylesheets.length !== 1) {
+    fail(`${page.file}: expected exactly one stylesheet`);
+  } else {
+    const stylesheetReference = attribute(stylesheets[0], "href");
+    stylesheetReferences.add(stylesheetReference);
+    if (!/^\/styles\.css\?v=\d+$/.test(stylesheetReference ?? "")) {
+      fail(`${page.file}: stylesheet must use a numeric cache version`);
+    }
+  }
+  const fontPreload = linkTags.find(
+    (tag) =>
+      attribute(tag, "rel") === "preload" &&
+      attribute(tag, "href") === "/assets/comfortaa-latin-700.woff2",
+  );
+  if (
+    !fontPreload ||
+    attribute(fontPreload, "as") !== "font" ||
+    attribute(fontPreload, "type") !== "font/woff2" ||
+    !/\bcrossorigin(?:\s|>)/i.test(fontPreload)
+  ) {
+    fail(`${page.file}: missing Comfortaa WOFF2 preload`);
+  }
   const canonical = linkTags.find((tag) => attribute(tag, "rel") === "canonical");
   if (page.canonical && attribute(canonical ?? "", "href") !== page.canonical) {
     fail(`${page.file}: incorrect canonical URL`);
   }
   if (!page.canonical && canonical) fail(`${page.file}: a 404 page must not be canonicalized`);
+  if (html.includes('hreflang="ka-GE"')) fail(`${page.file}: Georgian hreflang must be ka`);
 
   if (page.currentLanguage) {
     for (const [language, href] of Object.entries(languageAlternates)) {
@@ -175,6 +222,34 @@ for (const page of pages) {
         fail(`${page.file}: missing ${name}`);
       }
     }
+
+    for (const tag of metaTags.filter(
+      (candidate) =>
+        ["og:image", "og:image:secure_url"].includes(attribute(candidate, "property")) ||
+        attribute(candidate, "name") === "twitter:image",
+    )) {
+      const reference = attribute(tag, "content");
+      const resolved = reference ? resolveLocalReference(reference, page.file) : null;
+      if (!resolved) {
+        fail(`${page.file}: image metadata must use the latte.team origin`);
+        continue;
+      }
+      checkedReferences += 1;
+      if (!existsSync(path.join(root, resolved.file))) {
+        fail(`${page.file}: broken metadata image ${reference} -> ${resolved.file}`);
+      }
+    }
+  }
+
+  const brandLink = tags(html, "a").find((tag) =>
+    (attribute(tag, "class") ?? "").split(/\s+/).includes("brand"),
+  );
+  if (attribute(brandLink ?? "", "href") !== page.homeHref) {
+    fail(`${page.file}: brand link must point to ${page.homeHref}`);
+  }
+  if (!html.includes(page.footer)) fail(`${page.file}: incorrect localized footer`);
+  if (page.file === "404.html" && !/<span\s+lang=["']ka["']>/.test(html)) {
+    fail("404.html: missing Georgian explanation");
   }
 
   if (page.noindex && !metaTags.some((tag) => attribute(tag, "name") === "robots" && attribute(tag, "content")?.includes("noindex"))) {
@@ -208,6 +283,10 @@ for (const page of pages) {
   }
 }
 
+if (stylesheetReferences.size !== 1) {
+  fail(`Pages use inconsistent stylesheet references: ${[...stylesheetReferences].join(", ")}`);
+}
+
 const css = read("styles.css");
 if (css) {
   const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
@@ -215,6 +294,14 @@ if (css) {
   if (balance !== 0) fail("styles.css: unbalanced braces");
   for (const selector of [":focus-visible", "a:active", ".language-switcher a"]) {
     if (!css.includes(selector)) fail(`styles.css: missing ${selector}`);
+  }
+  for (const declaration of [
+    'html[lang="ka"] .eyebrow',
+    "text-transform: none",
+    "100dvh",
+    "100svh",
+  ]) {
+    if (!css.includes(declaration)) fail(`styles.css: missing ${declaration}`);
   }
   for (const match of css.matchAll(/url\(["']?([^"')]+)["']?\)/gi)) {
     const resolved = resolveLocalReference(match[1], "styles.css");
@@ -236,18 +323,25 @@ for (const expected of [
   "https://latte.team/",
   "https://latte.team/ru/",
   "https://latte.team/ka/",
-  'hreflang="ka-GE"',
+  'hreflang="ka"',
   'hreflang="x-default"',
 ]) {
   if (!sitemap.includes(expected)) fail(`sitemap.xml: missing ${expected}`);
 }
 if ((sitemap.match(/<url>/g) ?? []).length !== 3) fail("sitemap.xml: expected exactly three localized URLs");
+if (sitemap.includes('hreflang="ka-GE"')) fail("sitemap.xml: Georgian hreflang must be ka");
 
-const fontPath = path.join(root, "assets/comfortaa-bold.ttf");
+const fontPath = path.join(root, "assets/comfortaa-latin-700.woff2");
 if (existsSync(fontPath)) {
   const fontHash = createHash("sha256").update(readFileSync(fontPath)).digest("hex");
-  const expectedHash = "990742fd8ec75da91f4eabcce954f36316de713e1ff0140eeefda0db1c44f91f";
+  const expectedHash = "9c04952bd228b7e6234c45f8c1e7216d8e16bf1c052ebfa17b705dd04b7cae48";
   if (fontHash !== expectedHash) fail(`Comfortaa hash changed: ${fontHash}`);
+  if (!readFileSync(fontPath).subarray(0, 4).equals(Buffer.from("wOF2"))) {
+    fail("Comfortaa asset is not a WOFF2 file");
+  }
+}
+if (existsSync(path.join(root, "assets/comfortaa-bold.ttf"))) {
+  fail("Obsolete uncompressed Comfortaa TTF is still present");
 }
 
 if (failures.length > 0) {
