@@ -142,6 +142,21 @@ for (const file of requiredFiles) {
   if (!existsSync(path.join(root, file))) fail(`Missing required file: ${file}`);
 }
 
+const expectedRobots = [
+  "User-agent: *",
+  "Allow: /",
+  "",
+  "Sitemap: https://latte.team/sitemap.xml",
+].join("\n");
+const robots = read("robots.txt").replace(/\r\n/g, "\n").trim();
+if (robots !== expectedRobots) {
+  fail("robots.txt: expected root crawling to be allowed with the production sitemap URL");
+}
+
+if (read("CNAME").trim() !== "latte.team") {
+  fail("CNAME: expected the canonical bare domain latte.team");
+}
+
 const css = read("styles.css");
 const stylesheetHash = createHash("sha256").update(css).digest("hex").slice(0, 12);
 const expectedStylesheetReference = `/styles.css?v=${stylesheetHash}`;
@@ -288,6 +303,16 @@ for (const page of pages) {
   if (html.indexOf(skipLink ?? "") > html.indexOf("<header")) {
     fail(`${page.file}: skip link must precede the site header`);
   }
+
+  const main = tags(html, "main").find((tag) => attribute(tag, "id") === "top");
+  if (!main || attribute(main, "tabindex") !== "-1") {
+    fail(`${page.file}: #top main target must be programmatically focusable`);
+  }
+
+  const hasHeaderActions = tags(html, "div").some((tag) =>
+    (attribute(tag, "class") ?? "").split(/\s+/).includes("header-actions"),
+  );
+  if (!hasHeaderActions) fail(`${page.file}: missing header-actions layout container`);
 
   if (page.currentLanguage) {
     for (const [language, href] of Object.entries(languageAlternates)) {
@@ -436,6 +461,7 @@ if (css) {
     if (!css.includes(selector)) fail(`styles.css: missing ${selector}`);
   }
   for (const declaration of [
+    ".skip-link:focus",
     ".skip-link:focus-visible",
     "text-decoration-line: underline",
     'html[lang="ka"] .eyebrow',

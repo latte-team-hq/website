@@ -69,6 +69,12 @@ a:active {
   transition: transform 120ms ease;
 }
 
+.skip-link:focus {
+  outline-color: var(--white);
+  box-shadow: 0 0 0 7px var(--focus-ring);
+  transform: translateY(0);
+}
+
 .skip-link:focus-visible {
   outline-color: var(--white);
   box-shadow: 0 0 0 7px var(--focus-ring);
@@ -434,7 +440,6 @@ footer {
 :focus-visible {
   outline: 3px solid var(--focus-ring);
   outline-offset: 4px;
-  border-radius: 0.2rem;
 }
 
 .primary-action:focus-visible {
