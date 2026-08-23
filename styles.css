@@ -143,16 +143,16 @@ footer {
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.38rem;
+  gap: 0;
   color: #50616c;
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.08em;
   white-space: nowrap;
 }
 
 .language-switcher a {
-  min-width: 40px;
+  min-width: 32px;
   min-height: 40px;
   display: inline-grid;
   place-items: center;
@@ -162,21 +162,15 @@ footer {
 }
 
 .language-switcher a[aria-current="page"] {
-  color: var(--brand);
-  background: rgba(68, 97, 115, 0.1);
-  text-decoration-line: underline;
-  text-decoration-color: var(--brand);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 0.32rem;
+  font-weight: 700;
 }
 
 .language-switcher a:not([aria-current="page"]):hover {
   color: var(--ink);
-  background: rgba(68, 97, 115, 0.08);
 }
 
 .language-switcher a[lang="ka"] {
-  padding-inline: 0.45rem;
+  padding-inline: 0.25rem;
   letter-spacing: normal;
 }
 

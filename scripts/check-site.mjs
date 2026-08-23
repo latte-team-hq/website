@@ -463,7 +463,8 @@ if (css) {
   for (const declaration of [
     ".skip-link:focus",
     ".skip-link:focus-visible",
-    "text-decoration-line: underline",
+    '.language-switcher a[aria-current="page"]',
+    "font-weight: 500",
     'html[lang="ka"] .eyebrow',
     "text-transform: none",
     "100dvh",
