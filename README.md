@@ -28,9 +28,14 @@ Run the dependency-free site checks with Node.js 20 or newer:
 node scripts/check-site.mjs
 ```
 
-The checks cover page structure, metadata, internal and same-origin metadata links, consistent CSS
-cache versions, CSS syntax basics, and required assets. Pull requests and pushes to `main` run the
-same checks in GitHub Actions.
+The checks cover page structure, localized metadata values, internal links and anchors, a
+content-derived CSS cache version, CSS syntax basics, Open Graph image dimensions, and required
+assets. Pull requests and pushes to `main` run the same checks in GitHub Actions. The pull-request
+check should pass before merge; the post-merge `main` run is advisory because GitHub Pages publishes
+that branch through a separate repository setting.
+
+After editing `styles.css`, run the checker and update the stylesheet reference in all four HTML
+pages to the 12-character content hash reported in the failure message.
 
 ## Content security policy
 

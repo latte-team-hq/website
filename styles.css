@@ -51,6 +51,30 @@ a:active {
   opacity: 0.68;
 }
 
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: var(--page-pad);
+  right: var(--page-pad);
+  z-index: 20;
+  width: fit-content;
+  max-width: calc(100% - (2 * var(--page-pad)));
+  padding: 0.75rem 1rem;
+  border-radius: 0.35rem;
+  color: var(--white);
+  background: var(--brand-deep);
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(calc(-100% - 1rem));
+  transition: transform 120ms ease;
+}
+
+.skip-link:focus-visible {
+  outline-color: var(--white);
+  box-shadow: 0 0 0 7px var(--focus-ring);
+  transform: translateY(0);
+}
+
 .site-header,
 main,
 footer {
@@ -134,6 +158,10 @@ footer {
 .language-switcher a[aria-current="page"] {
   color: var(--brand);
   background: rgba(68, 97, 115, 0.1);
+  text-decoration-line: underline;
+  text-decoration-color: var(--brand);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.32rem;
 }
 
 .language-switcher a:not([aria-current="page"]):hover {
@@ -507,6 +535,7 @@ footer {
 
   a,
   .primary-action,
+  .skip-link,
   .language-switcher a {
     transition: none;
   }
